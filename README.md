@@ -34,7 +34,8 @@ SQL 5.7二进制包(mysql官网)
 通过命令行或系统服务管理工具启动mysql服务，并检查服务状态正常运行
 
 依赖包安装两个（libaio:功能是支持异步I/O操作，mysql运行必需，numactl优化多核cpu内存分配）
-centos服务器
+centos服务器用sudo yum install libaio numactl-libs -y安装依赖包
+ubuntu服务器用sudo apt update和sudo apt libaio numactl-libs -y安装依赖包
 
 四.配置用户权限确保只能访问授权的数据，配置防火墙，确保特定端口访问mysql服务，防止未经授权的访问
 
