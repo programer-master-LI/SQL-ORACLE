@@ -1,0 +1,173 @@
+数据处理————高级查询————数据库管理
+SELECT 列名 FROM 表名 是 SQL 查询数据的标准语法。
+EXTRACT 用于提取日期时间字段，不用于选择列。
+SELECT FirstName
+FROM Persons;
+语句正式结束时要加封号
+在 MySQL 中，如何从名为 "Persons" 的表中选择所有列
+SELECT * FROM Persons;
+* 表示选择表中的所有列。
+
+如何从名为“Persons”的表中选择  “FirstName”  列的值为“Peter”的所有记录
+使用 SQL 的 WHERE 子句表示选择所有
+SELECT * FROM Persons WHERE FirstName = 'Peter';
+SELECT *：表示选择表中的所有列。
+FROM Persons：指定数据来源表为 Persons。
+WHERE FirstName = 'Peter'：筛选出 FirstName 等于 Peter 的记录。
+
+如何从名为“Persons”的表中选择所有“FirstName”  列的值以“a”开头的记录
+使用 SQL 的 LIKE 运算符
+SELECT * FROM Persons WHERE FirstName LIKE 'a%';
+LIKE：用于模式匹配。
+'a%'：
+a 表示以字母 a 开头；
+% 表示 后面可以跟任意数量任意长的字符。即a后面跟很多字符，Alice，anna
+      数据库采用不区分大小写的排序规则（MySQL 默认常见情况）
+
+如何从名为“Persons”的表中选择所有“FirstName”为“Peter” 且“LastName”为“Jackson”的记录
+or表示只满足一个条件就选出来，and表示前后都满足才选出来
+SELECT *
+FROM Persons
+WHERE FirstName = 'Peter'
+AND LastName = 'Jackson';
+
+如何从名为“Persons”的表中选择所有“LastName”  字母顺序 在“Hansen”和“Pettersen”之间的记录（包括“Hansen”和“Pettersen”）。h i j k l m n o p
+从表中选择所有 LastName 按字母顺序位于 "Hansen" 和 "Pettersen" 之间（包含两端值）的记录，可以使用 BETWEEN。
+SELECT *
+FROM Persons
+WHERE LastName BETWEEN 'Hansen' AND 'Pettersen';
+BETWEEN A AND B 表示：>= A AND <= B
+包含边界值，因此：
+Hansen 会被选中
+Pettersen 也会被选中
+等价写法
+SELECT *
+FROM Persons
+WHERE LastName >= 'Hansen' AND LastName <= 'Pettersen';
+
+MySQL 中哪个语句只返回不同的值（不重复）重复的值只显示一次。
+SELECT DISTINCT column_name FROM table_name;
+DISTINCT 用于去除重复值，只返回唯一值。
+
+使用哪个关键字对结果集进行排序 ORDER BY
+按 LastName 升序排序：
+SELECT *FROM Persons ORDER BY LastName（ASC）;
+
+按 Age 降序排序：
+SELECT *FROM Persons ORDER BY Age DESC;
+排序方式
+ASC：升序（默认）
+DESC：降序
+
+如何向“Persons”表中插入一条新记录，使用 INSERT INTO 语句
+INSERT INTO 表名 (列1, 列2, ...) VALUES (值1, 值2, ...);
+INSERT INTO Persons (FirstName, LastName, Age) VALUES ('John', 'Smith', 25);
+如果为所有列提供值 可以省略列名：
+INSERT INTO Persons VALUES (1, 'John', 'Smith', 25);
+
+如何使用 MySQL 将“Olsen”作为“LastName”插入到“Persons”表中
+如果只给 LastName 列赋值，可以使用：
+INSERT INTO Persons (LastName) VALUES ('Olsen');
+INSERT INTO Persons：向 Persons 表插入数据。
+(LastName)：指定插入的列。VALUES ('Olsen')：插入的值。
+
+如何将 Persons 表中“LastName”列中的“Hansen”更改为“Nilsen”（替换）对应增删查改中的改，更新
+UPDATE Persons SET LastName = 'Nilsen' WHERE LastName = 'Hansen';
+UPDATE Persons：更新 Persons 表。
+SET LastName = 'Nilsen'：将 LastName 修改为 Nilsen。
+         WHERE LastName = 'Hansen'：只修改原来为 Hansen 的记录。where指某某处的
+
+如何删除 Persons 表中“FirstName”为“Peter”的记录
+DELETE FROM Persons WHERE FirstName = 'Peter';
+DELETE FROM Persons：从 Persons 表中删除记录。
+WHERE FirstName = 'Peter'：只删除名字为 Peter 的记录。
+如果省略 WHERE子句，DELETE FROM Persons;删除表中的所有记录。
+
+如何返回“Persons”表中的记录数        SELECT COUNT（列名） FROM 表
+SELECT COUNT(*) FROM Persons;
+COUNT(*)：统计表中的所有记录（行）数。计数器
+FROM Persons：从 Persons 表中统计。
+返回：
+COUNT(*)
+3
+也可以统计某一列的 非空值数量：
+SELECT COUNT(LastName) FROM Persons;
+
+MySQL 支持哪些类型的连接（JOIN）
+1. INNER JOIN（内连接）
+返回两个表中匹配的记录。
+SELECT * FROM Orders 
+INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID;
+2. LEFT JOIN（左连接）
+返回左表所有记录，以及右表中匹配的记录。
+SELECT *
+FROM Customers
+LEFT JOIN Orders
+ON Customers.CustomerID = Orders.CustomerID;
+3. RIGHT JOIN（右连接）
+返回右表所有记录，以及左表中匹配的记录。
+SELECT *
+FROM Customers
+RIGHT JOIN Orders
+ON Customers.CustomerID = Orders.CustomerID;
+4. CROSS JOIN（交叉连接）
+返回两个表的笛卡尔积。
+SELECT *
+FROM Customers
+CROSS JOIN Orders;
+
+哪个运算符用于选择给定范围内的值    BETWEEN 
+选择年龄在 18 到 30 之间的记录（包含 18 和 30）：
+SELECT *
+FROM Persons
+WHERE Age BETWEEN 18 AND 30;
+
+NOT NULL 约束强制列不接受 NULL 值,确保某列不能存储 NULL 值
+如
+CREATE TABLE Persons (
+    ID INT NOT NULL,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50)
+);
+其中：
+ID INT NOT NULL
+FirstName VARCHAR(50) NOT NULL
+表示：
+ID 不能为空
+FirstName 不能为空
+
+下面的插入会失败：
+INSERT INTO Persons (ID, FirstName)
+VALUES (NULL, 'Peter');
+因为 ID 列设置了 NOT NULL。
+
+哪个运算符用于在列中搜索指定的模式    LIKE
+查找所有 FirstName 以字母 A 开头的记录：
+SELECT *
+FROM Persons
+WHERE FirstName LIKE 'A%';
+
+WHERE FirstName LIKE '_a%'
+表示第二个字母是 a。
+%	任意数量的字符，，_	单个字符
+
+使用哪个 MySQL 语句可以创建名为“Customers”的数据库表？
+CREATE TABLE 表名 (
+    列名1 数据类型,
+    列名2 数据类型,
+    ...
+);
+CREATE TABLE Customers (
+    CustomerID INT NOT NULL,       数据类型 和 规定不空值
+    CustomerName VARCHAR(100),      VARCHAR = Variable Character（可变长度字符串）规定100 = 最多可存储 100 个字符
+    ContactName VARCHAR(100),
+    City VARCHAR(50)
+);
+
+
+
+
+
+
+
+
