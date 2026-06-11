@@ -1,2 +1,50 @@
 数据库命令
-一、
+一、在您的网站上显示数据
+要构建一个显示数据库数据的网站，您需要：
+
+关系数据库管理系统（RDBMS）程序（例如 MySQL）
+服务器端脚本语言，例如 PHP
+要使用 SQL 获取所需数据
+使用 HTML/CSS 设置页面样式
+
+什么是关系数据库管理系统（RDBMS）
+RDBMS（关系数据库管理系统）是用于维护关系数据库的程序。
+关系数据库管理系统（RDBMS）是所有现代数据库系统的基础，例如 MySQL、Microsoft SQL Server、Oracle 和 Microsoft Access。
+关系数据库管理系统（RDBMS）中的 数据存储在称为 表的数据库对象中。 表是相关数据条目的集合，由列和行组成。
+
+什么是数据库表？
+表格是相关数据条目的集合，它由列和行组成。
+
+列（或字段）是表中的 垂直实体，它保存一组 特定类型的数据值。
+行（或记录）是表中的 水平实体，它保存表中的 每个单独条目。
+
+请查看 Northwind “客户”表格中的部分内容：
+CustomerID	CustomerName	ContactName	Address	City	PostalCode	Country
+1	Alfreds Futterkiste	Maria Anders	Obere Str. 57	Berlin	12209	Germany
+2	Ana Trujillo Emparedados y helados	Ana Trujillo	Avda. de la Constitución 2222	México D.F.	05021	Mexico
+3	Antonio Moreno Taquería	Antonio Moreno	Mataderos 2312	México D.F.	05023	Mexico
+上表中“客户”列的包含以下字段：客户ID、客户姓名、联系人姓名、地址、城市、邮政编码和国家/地区。该表共有3条记录（3行）。
+
+什么是关系型数据库？
+关系型数据库 以表格的形式定义 数据库关系。这些表格 彼此关联，关联的基础是 它们共有的数据。
+表格之间通过共有数据存在 相互联系相互关联
+请查看 Northwind 数据库中以下三个表格中的部分内容：“客户”、“订单”和“发货人”：
+顾客桌
+CustomerID	CustomerName	ContactName	Address	City	PostalCode	Country
+1Alfreds Futterkiste	Maria Anders	Obere Str. 57	Berlin	12209	Germany
+2	Ana Trujillo Emparedados y helados	Ana Trujillo	Avda. de la Constitución 2222	México D.F.	05021	Mexico
+“Customers”表和“Orders”表之间的关系是通过CustomerID列实现的：
+
+订单表
+OrderID	CustomerID	EmployeeID	OrderDate	ShipperID
+10308	2	7	1996-09-18	3
+103554	6	1996-11-15	1
+“订单”表和“托运人”表之间的关系是通过 ShipperID 列实现的：
+
+托运人表
+ShipperID	ShipperName	Phone
+1	Speedy Express	(503) 555-9831
+2	United Package	(503) 555-3199
+
+
+
