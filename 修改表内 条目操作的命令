@@ -182,16 +182,35 @@ VALUES
 ('Tasty Tee', 'Finn Egan', 'Streetroad 19B', 'Liverpool', 'L1 0AA', 'UK');
 
 10.如何将 Persons 表中“LastName”列中的“Hansen”更改为“Nilsen”（替换）对应增删查改中的改，更新
-UPDATE Persons SET LastName = 'Nilsen' WHERE LastName = 'Hansen';
-UPDATE Persons：更新 Persons 表。
+   UPDATE语句用于更新或修改表中的一条或多条记录。
+UPDATE table_name SET column1 = value1, column2 = value2 WHERE condition;
+语句 WHERE该WHERE子句指定要更新哪些记录。如果省略该WHERE子句，则表中所有记录都将被更新！
+UPDATE Persons SET LastName = 'Nilsen' WHERE LastName = 'Hansen';      (更新替换记录)
+说明UPDATE Persons：更新 Persons 表。
 SET LastName = 'Nilsen'：将 LastName 修改为 Nilsen。
-         WHERE LastName = 'Hansen'：只修改原来为 Hansen 的记录。where指某某处的
+         WHERE LastName = 'Hansen'：只修改原来为 Hansen 的记录。where指定某某处的记录
+
+//更新多条记录
+//以下 SQL 语句会将国家/地区为“墨西哥”的所有记录的 ContactName 更新为“Juan”：
+//UPDATE Customers SET ContactName='Juan' WHERE Country='Mexico';
 
 11.如何删除 Persons 表中“FirstName”为“Peter”的记录
-DELETE FROM Persons WHERE FirstName = 'Peter';
+DELETE FROM Persons WHERE FirstName = 'Peter';             (删除表中已有的记录)
 DELETE FROM Persons：从 Persons 表中删除记录。
 WHERE FirstName = 'Peter'：只删除名字为 Peter 的记录。
-如果省略 WHERE子句，DELETE FROM Persons;删除表中的所有记录。
+      如果省略 WHERE子句，DELETE FROM Persons;删除表中的所有记录。
+
+删除所有记录
+可以在不删除表的情况下 删除表中的所有记录。这意味着表的结构、属性和索引都将保持不变。
+DELETE FROM table_name;
+以下 SQL 语句会删除“Customers”表中的所有记录，而不会删除该表：
+DELETE FROM Customers;
+
+删除表格
+要彻底删除整个表，使用以下DROP TABLE语句：
+DROP TABLE table_name;
+
+
 
 如何返回“Persons”表中的记录数        SELECT COUNT（列名） FROM 表
 SELECT COUNT(*) FROM Persons;
