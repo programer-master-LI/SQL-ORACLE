@@ -82,7 +82,7 @@ NOT运算符与运算符结合使用 =。NOT运算符还可以与其他运算符
 NOT LIKE
 NOT BETWEEN
 NOT IN
-IS NOT NULL
+IS NOT NULL        
 NOT EXISTS
 
 NOT LIKE运算符用于子句中WHERE，以排除与指定字符模式匹配的行。
@@ -109,13 +109,32 @@ SELECT * FROM Customers WHERE NOT CustomerID > 50;
 以下 SQL 语句选择 CustomerID 不小于 50 的所有客户：
 SELECT * FROM Customers WHERE NOT CustomerId < 50;
 
+IS NOT NULL    （语法列名 IS NOT NULL）
+判断字段值不为空，专门用来检测列的值是否不是 NULL。
+注意：NULL ≠ 空字符串 ''、≠ 0。SQL 中 NULL 和任何值比较结果都是未知，必须用 IS NULL / IS NOT NULL
+null它本身并不是一个值，而是一个占位符，用于指示数据缺失。有NULL 值的字段是指在创建记录时留空的字段。
+SELECT * FROM student WHERE name IS NOT NULL;
+只返回了id=1 的数据（id=3 的 name 是 NULL，会被过滤）。
+SELECT column_names FROM table_name WHERE column_name IS NULL(IS NOT NULL);
 
+NOT EXISTS判断子查询没有返回任何结果    （不存在 匹配的数据）。
+常用于关联两张表，判断「主表记录  在 子表中无对应关联数据」。
+WHERE NOT EXISTS (子查询)
+EXISTS / NOT EXISTS 只判断有无结果集，不关心返回什么字段，子查询写 SELECT * 效率最高；
+执行逻辑： 外层表 逐行匹配 子查询，大数据量下效率通常优于 NOT IN
+两张表：
+student(id, name) 学生表
+score(stu_id, subject) 成绩表
+需求：查询 没有任何成绩 的学生
+SELECT * FROM student s
+WHERE NOT EXISTS (
+    SELECT * FROM score sc
+    WHERE sc.stu_id = s.id
+);
+逻辑：
+对每一条学生记录，检查成绩表中不存在对应学号 → 选出无成绩的学生。
 
-
-
-
-
-7.使用哪个关键字对结果集进行排序                       ORDER BY
+8.使用哪个关键字对结果集进行排序                       ORDER BY
 ORDER BY关键字用于按升序或降序对结果集进行排序。
 SELECT column1, column2, ...FROM table_name
 ORDER BY column1, column2, ... ASC|DESC;
@@ -141,28 +160,34 @@ SELECT * FROM Customers ORDER BY Country, CustomerName;
 意味着它 首先按国家/地区排序，如果某些记录的国家/地区相同，则 按客户名称排序
 SELECT * FROM Customers ORDER BY Country ASC, CustomerName DESC;      按“Country”列升序排序，按“CustomerName”列降序排序
 
-8.如何向“Persons”表中插入一条新记录，使用 INSERT INTO 语句        
+9.如何向“Persons”表中插入一条新记录，使用 INSERT INTO 语句        
     语法INSERT INTO 表名 (列1, 列2, ...) VALUES (值1, 值2, ...); （ 插入列和值，INSERT INTO 语句）
 INSERT INTO Persons (FirstName, LastName, Age) VALUES ('John', 'Smith', 25);
-如果为 所有列提供值 可以省略列名：
+  如果为 所有列提供值 可以省略列名：但是，这些值的顺序必须与表格中列的顺序一致：
 INSERT INTO Persons VALUES (1, 'John', 'Smith', 25);            （插入单 行记录）
 
 如何使用 MySQL 将“Olsen”作为“LastName”插入到“Persons”表中
 如果只给 LastName 列赋值，可以使用：
-INSERT INTO Persons (LastName) VALUES ('Olsen');
+INSERT INTO Persons (LastName) VALUES ('Olsen');                （只在表格的某些特定指定列中插入值）
 INSERT INTO Persons：向 Persons 表插入数据。
 (LastName)：指定插入的列。VALUES ('Olsen')：插入的值。
 
+插入多行
+要插入多行数据，我们使用相同的INSERT INTO语句，但使用多个值，      用逗号分隔每组值,
+以下 SQL 语句在“Customers”表中插入三条新记录：
+INSERT INTO Customers (CustomerName, ContactName, Address, City, PostalCode, Country)
+VALUES
+('Cardinal', 'Tom B. Erichsen', 'Skagen 21', 'Stavanger', '4006', 'Norway'),   逗号
+('Greasy Burger', 'Per Olsen', 'Gateveien 15', 'Sandnes', '4306', 'Norway'),   逗号
+('Tasty Tee', 'Finn Egan', 'Streetroad 19B', 'Liverpool', 'L1 0AA', 'UK');
 
-
-
-如何将 Persons 表中“LastName”列中的“Hansen”更改为“Nilsen”（替换）对应增删查改中的改，更新
+10.如何将 Persons 表中“LastName”列中的“Hansen”更改为“Nilsen”（替换）对应增删查改中的改，更新
 UPDATE Persons SET LastName = 'Nilsen' WHERE LastName = 'Hansen';
 UPDATE Persons：更新 Persons 表。
 SET LastName = 'Nilsen'：将 LastName 修改为 Nilsen。
          WHERE LastName = 'Hansen'：只修改原来为 Hansen 的记录。where指某某处的
 
-如何删除 Persons 表中“FirstName”为“Peter”的记录
+11.如何删除 Persons 表中“FirstName”为“Peter”的记录
 DELETE FROM Persons WHERE FirstName = 'Peter';
 DELETE FROM Persons：从 Persons 表中删除记录。
 WHERE FirstName = 'Peter'：只删除名字为 Peter 的记录。
@@ -178,28 +203,8 @@ COUNT(*)
 也可以统计某一列的 非空值数量：
 SELECT COUNT(LastName) FROM Persons;
 
-MySQL 支持哪些类型的连接（JOIN）
-1. INNER JOIN（内连接）
-返回两个表中匹配的记录。
-SELECT * FROM Orders 
-INNER JOIN Customers ON Orders.CustomerID = Customers.CustomerID;
-2. LEFT JOIN（左连接）
-返回左表所有记录，以及右表中匹配的记录。
-SELECT *
-FROM Customers
-LEFT JOIN Orders
-ON Customers.CustomerID = Orders.CustomerID;
-3. RIGHT JOIN（右连接）
-返回右表所有记录，以及左表中匹配的记录。
-SELECT *
-FROM Customers
-RIGHT JOIN Orders
-ON Customers.CustomerID = Orders.CustomerID;
-4. CROSS JOIN（交叉连接）
-返回两个表的笛卡尔积。
-SELECT *
-FROM Customers
-CROSS JOIN Orders;
+
+
 
 哪个运算符用于选择给定范围内的值    BETWEEN 
 选择年龄在 18 到 30 之间的记录（包含 18 和 30）：
