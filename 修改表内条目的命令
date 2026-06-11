@@ -1,37 +1,65 @@
 数据处理————高级查询————数据库管理
 SELECT 列名 FROM 表名 是 SQL 查询数据的标准语法。
 EXTRACT 用于提取日期时间字段，不用于选择列。
-SELECT FirstName
-FROM Persons;
+SELECT FirstName FROM Persons;
 语句正式结束时要加封号
-在 MySQL 中，如何从名为 "Persons" 的表中选择所有列
-SELECT * FROM Persons;
+文本字段与数字字段
+SQL 要求文本值   用单引号括起来（大多数数据库系统也允许使用双引号）。
+但是，数值字段   不应该用引号括起来：SELECT * FROM Customers WHERE CustomerID = 1;
+
+1.在 MySQL 中，如何从名为 "Persons" 的表中选择所有列
+SELECT * FROM Persons;                            (所有列）
 * 表示选择表中的所有列。
 
-如何从名为“Persons”的表中选择  “FirstName”  列的值为“Peter”的所有记录
-使用 SQL 的 WHERE 子句表示选择所有
-SELECT * FROM Persons WHERE FirstName = 'Peter';
+SELECT column1, column2, ...FROM table_name;     （两列多列）
+
+2.在MySQL表格中，一列可能包含多个重复值——有时你只想列出唯一值。哪个语句只返回不同的值（不重复）重复的值只显示一次。
+SELECT DISTINCT column1，column2  FROM table_name;      （表中选择所有不同的值） SELECT DISTINCT Country FROM Customers;
+DISTINCT 用于去除重复值，只返回唯一值。
+
+统计不同值select COUNT(DISTINCT column列名  )
+通过使用 COUNT()带有 DISTINCT关键字的函数，我们可以统计不同国家的数量。
+SELECT COUNT(DISTINCT Country) FROM Customers;     (计数器count)
+
+3.如何从名为“Persons”的表中选择  “FirstName”  列的值为“Peter”的所有记录
+   使用 SQL 的 WHERE 子句表示选择所有仅提取满足特定条件的记录。筛选记录
+SELECT * FROM Persons WHERE FirstName = 'Peter';   (where 条件句)
 SELECT *：表示选择表中的所有列。
 FROM Persons：指定数据来源表为 Persons。
 WHERE FirstName = 'Peter'：筛选出 FirstName 等于 Peter 的记录。
+SELECT column1, column2, ...FROM table_name WHERE condition;
 
-如何从名为“Persons”的表中选择所有“FirstName”  列的值以“a”开头的记录
+WHERE 子句中的运算符
+除了运算符=><，>=<=，<>，之外，您还可以使用其他运算符 =来筛选搜索结果。
+BETWEEN，LIKE，IN
+             列名=某值表示条件，还可以用判断句表条件
+
+4.如何从名为“Persons”的表中选择所有“FirstName”  列的值以“a”开头的记录
 使用 SQL 的 LIKE 运算符
-SELECT * FROM Persons WHERE FirstName LIKE 'a%';
-LIKE：用于模式匹配。
+SELECT * FROM Persons WHERE FirstName LIKE 'a%';     （筛选LIKE 运算符）  LIKE 'a%'之间没有=号，like自己就是运算符     
+LIKE：用于模式匹配。                      常用来筛选以字母a,b,c开头的单词
 'a%'：
 a 表示以字母 a 开头；
 % 表示 后面可以跟任意数量任意长的字符。即a后面跟很多字符，Alice，anna
       数据库采用不区分大小写的排序规则（MySQL 默认常见情况）
 
-如何从名为“Persons”的表中选择所有“FirstName”为“Peter” 且“LastName”为“Jackson”的记录
+5.如何从名为“Persons”的表中选择所有“FirstName”为“Peter” 且“LastName”为“Jackson”的记录
 or表示只满足一个条件就选出来，and表示前后都满足才选出来
+WHERE子句可以包含一个或   多个 AND运算符，用于根据多个条件筛选记录。
+可以包含一个或多个OR运算符，用于根据多个条件筛选记录。
 SELECT *
 FROM Persons
 WHERE FirstName = 'Peter'
 AND LastName = 'Jackson';
 
-如何从名为“Persons”的表中选择所有“LastName”  字母顺序 在“Hansen”和“Pettersen”之间的记录（包括“Hansen”和“Pettersen”）。h i j k l m n o p
+还可以  组合AND使用OR运算符。
+SELECT * FROM Customers
+WHERE Country = 'Spain' AND (CustomerName LIKE 'G%' OR CustomerName LIKE 'R%');
+如果不加括号，上面的 SQL 语句将返回所有来自西班牙且以“G”开头的客户，以及 所有以“R”开头的客户，无论其国家/地区值如何：
+SELECT * FROM Customers
+WHERE Country = 'Spain' AND CustomerName LIKE 'G%' OR CustomerName LIKE 'R%';就会不受约束了前一个条件，挑选任何国家R开头的客户
+
+6.如何从名为“Persons”的表中选择所有“LastName”  字母顺序 在“Hansen”和“Pettersen”之间的记录（包括“Hansen”和“Pettersen”）。h i j k l m n o p
 从表中选择所有 LastName 按字母顺序位于 "Hansen" 和 "Pettersen" 之间（包含两端值）的记录，可以使用 BETWEEN。
 SELECT *
 FROM Persons
@@ -45,9 +73,7 @@ SELECT *
 FROM Persons
 WHERE LastName >= 'Hansen' AND LastName <= 'Pettersen';
 
-MySQL 中哪个语句只返回不同的值（不重复）重复的值只显示一次。
-SELECT DISTINCT column_name FROM table_name;
-DISTINCT 用于去除重复值，只返回唯一值。
+
 
 使用哪个关键字对结果集进行排序 ORDER BY
 按 LastName 升序排序：
