@@ -1,4 +1,5 @@
 数据处理————高级查询————数据库管理
+
 SELECT 列名 FROM 表名 是 SQL 查询数据的标准语法。
 EXTRACT 用于提取日期时间字段，不用于选择列。
 SELECT FirstName FROM Persons;
@@ -209,6 +210,50 @@ DELETE FROM Customers;
 删除表格
 要彻底删除整个表，使用以下DROP TABLE语句：
 DROP TABLE table_name;
+
+12.SELECT TOP 子句   （mysql支持两种写法）
+SELECT TOP子句用于 限制要返回的记录数。
+SELECT TOP子句适用于 包含数千条记录的大型表。返回大量记录可能会  影响性能。
+1.以下 SQL 语句仅选择“Customers”表中的前 3 条记录：                 ///从表中所有记录选///
+SELECT （TOP 3） * FROM Customers;                              （限制返回记录条数）
+SELECT * FROM Customers （LIMIT 3）;     等效示例
+MySQL 支持使用该LIMIT子句来选择有限数量的记录，而 Oracle 使用. FETCH FIRST n ROWS ONLY
+SELECT * FROM Customers FETCH FIRST 3 ROWS ONLY;
+
+SQL Server/MS Access 的语法
+SELECT TOP number|percent column_name(s) FROM table_name WHERE condition;
+MySQL 语法
+SELECT column_name(s) FROM table_name WHERE condition LIMIT number;
+Oracle 12+ 的语法
+SELECT column_name(s) FROM table_name ORDER BY column_name(s) FETCH FIRST number ROWS ONLY;
+
+2.高阶用法SQL TOP PERCENT 
+使用SELECT TOP带有百分比语法的子句。从“Customers”表中选择前 50% 的记录适用于 SQL Server，
+SELECT TOP 50 PERCENT * FROM Customers;  
+展示 Oracle 的等效示例：
+SELECT * FROM Customers FETCH FIRST 50 PERCENT ROWS ONLY;
+                                                 
+3.选择前几个结果，并带 WHERE 条件                               
+从“Customers”表中选择前三条记录，其中 Country 为“Germany”适用于 SQL Server，
+SELECT TOP 3 * FROM Customers WHERE Country = 'Germany';                 ///从指定记录中选///
+ MySQL 的等效示例：
+SELECT * FROM Customers WHERE Country = 'Germany' LIMIT 3;
+Oracle 的等效示例：
+SELECT * FROM Customers WHERE Country = 'Germany' FETCH FIRST 3 ROWS ONLY;
+
+4.SELECT TOP and ORDER BY
+ORDER BY当需要  对结果进行排序时，添加关键字，并返回  排序结果的前 3 条记录。
+适用于 SQL Server
+按 CustomerName 的字母顺序对结果进行反向排序，并返回前 3 条记录：
+SELECT TOP 3 * FROM Customers ORDER BY CustomerName DESC;
+ MySQL 的等效示例：
+SELECT * FROM Customers ORDER BY CustomerName DESC LIMIT 3;
+Oracle 的等效示例：
+SELECT * FROM Customers ORDER BY CustomerName DESC FETCH FIRST 3 ROWS ONLY;
+
+
+
+
 
 
 
