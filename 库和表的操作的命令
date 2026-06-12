@@ -1,4 +1,159 @@
 库操作
+1.CREATE DATABASE 语句
+该CREATE DATABASE语句用于创建新的 SQL 数据库。
+创建新数据库需要管理员权限。
+CREATE DATABASE database_name;                        （创建表）
+创建一个名为“testDB”的数据库：
+CREATE DATABASE testDB;
+
+2.显示数据库
+数据库创建完成后，使用以下 SQL 命令在数据库列表中查看它：
+SQL Server 语法
+SELECT name FROM sys.databases; 不用更改就这么输入
+MySQL 语法
+SHOW DATABASES;
+
+3.删除数据库语句SQL DROP DATABASE 语句
+该DROP DATABASE语句用于  永久删除现有的 SQL 数据库。
+删除数据库会删除 数据库及其所有内容（表、视图、存储过程和数据）！
+DROP DATABASE databasename;
+DROP DATABASE testDB;
+删除数据库后，使用上面的显示命令 检查它是否已从数据库列表中删除
+
+4.备份数据库语句 BACKUP DATABASE语句                        （备份数据库，也就是在其他磁盘里再存一份）
+该BACKUP DATABASE语句用于 SQL Server 中，以创建现有 SQL 数据库的完整备份。
+BACKUP DATABASE databasename  要备份的数据库名
+TO DISK = 'filepath';数据库备份保存路径
+将现有数据库“testDB”完整备份到 D 盘：
+BACKUP DATABASE testDB
+TO DISK = 'D:\backups\testDB.bak';
+务必将备份数据库放在与原始数据库 不同的驱动器上！这样，即使发生 磁盘崩溃，也不会丢失备份文件。
+
+///使用差异备份语句 WITH DIFFERENTIAL只备份更改部分
+差异备份仅捕获  自上次完整备份以来 发生更改的数据。
+差异备份可以减少备份时间（因为只备份更改部分）。
+差异备份是至少已经在要备份的盘位置 有过一次完整备份的备份！
+BACKUP DATABASE databasename
+TO DISK = 'filepath' WITH DIFFERENTIAL;
+创建数据库“testDB”的差异备份：
+BACKUP DATABASE testDB
+TO DISK = 'D:\backups\testDB.bak'
+WITH DIFFERENTIAL;
+
+5.CREATE TABLE 语句
+该CREATE TABLE语句用于在数据库中创建新表。
+CREATE TABLE table_name (
+  column1 datatype constraint,
+  column2 datatype constraint,
+  column3 datatype constraint,    #column1 、column2 、... 参数指定表中的列名
+  ....                            #datatype参数指定 每一列的数据类型（例如 varchar、int、date 等）。
+);                                #constraint约束参数是可选的，用于指定数据完整性规则（例如主键、非空等）
+例子创建表
+CREATE TABLE Persons (
+  PersonID int PRIMARY KEY,
+  LastName varchar(255) NOT NULL,
+  FirstName varchar(255),
+  Address varchar(255),
+  City varchar(255)
+);
+PersonID - 此列为整数 (int) 类型。   ////它也是主键字段，用于唯一标识每一行。////
+LastName - 此列为可变长度字符串varchar，最大长度为 255 个字符 (varchar(255))。//NOT NULL 表示此列不能为空。
+FirstName、Address、City——这些列也是可变长度字符串，最大长度为 255 个字符 (varchar(255))。//这些列默认允许 NULL 值。
+此时就创建了一个新的 空的“人员”表
+         可以用 SQL INSERT INTO语句向空的“Persons”表中填充数据。
+
+///从现有表创建新表                                              （备份表，也就是存一份新表，这个表还是在这个盘下）
+该CREATE TABLE语句还可以用来创建一个新表，该新表 复制 现有表中的部分或全部数据。（即现有表的副本）
+如果从现有表 创建新表，则新表将  填充现有表中的值。
+CREATE TABLE new_table AS
+SELECT column1, column2 ..FROM existing_table
+WHERE ....;
+创建一个名为“GermanCustomers”的新表（它是“Customers”表的副本）： 
+CREATE TABLE GermanCustomers AS
+SELECT * FROM Customers
+WHERE Country = 'Germany';   表示从国家为德国的客户记录创建一个新德国客户表
+
+6.删除表语句 SQL DROP TABLE 语句
+该DROP TABLE语句用于 永久删除数据库 中已存在的表。
+DROP TABLE table_name;
+为防止发生错误（例如表不存在），最佳好添加以下IF EXISTS子句：
+DROP TABLE IF EXISTS table_name;                                  （删除表）
+在大多数数据库中，您无法删除 被另一个表通过 外键约束引用的表 。要解决此问题，您必须移除 外键约束或删除 依赖表。
+例子删除表
+删除“Shippers”表：
+DROP TABLE IF EXISTS Shippers;
+
+///删除表中的所有记录TRUNCATE TABLE                                （清空表中的所有记录）
+该TRUNCATE TABLE语句用于 删除表中的所有记录，但会  保留表结构、列和约束。
+TRUNCATE TABLE table_name;
+
+7.修改表ALTER TABLE 语句
+该ALTER TABLE语句用于在现有表中  添加、删除或修改列。（类似插入的用法，插入一整条记录）修改是局部修改某列的值
+该ALTER TABLE语句还可用于 添加和删除现有表的各种约束。
+常见ALTER TABLE操作包括：
+添加列 - 向表中添加新列
+删除列 - 删除表中的列
+重命名列 - 重命名列
+修改列 - 更改列的数据类型、大小或约束条件
+添加约束 - 添加新的约束
+重命名表 - 重命名表
+//ALTER TABLE - ADD 列
+要在表中添加列，使用以下语法：
+ALTER TABLE table_name ADD column_name datatype;
+以下 SQL 语句向“Customers”表中添加“Email”列
+ALTER TABLE Customers ADD Email varchar(255);
+
+//ALTER TABLE - DROP COLUMN
+要删除表中的列，请使用以下语法（请注意，某些数据库系统不允许删除列）：
+ALTER TABLE table_name DROP COLUMN column_name;
+以下 SQL 语句从“Customers”表中删除“Email”列：
+ALTER TABLE Customers DROP COLUMN Email;
+
+//ALTER TABLE - RENAME COLUMN
+要重命名表中的列，使用以下语法：
+ALTER TABLE table_name RENAME COLUMN old_name to new_name;
+要在 SQL Server 中重命名表中的列，使用以下语法：
+SQL Server 语法：
+EXEC sp_rename 'table_name.old_name', 'new_name', 'COLUMN';
+
+//ALTER TABLE - MODIFY 数据类型
+要修改表中 列的数据类型、大小或约束，使用以下语法：
+SQL Server/MS Access 的语法：
+ALTER TABLE table_name
+ALTER COLUMN column_name new_datatype constraint;  双alter
+MySQL/Oracle 的语法：
+ALTER TABLE table_name
+MODIFY column_name new_datatype constraint;      alter modify
+以下 SQL 语句将“Email”列的  大小修改为 varchar(100)，并且我们还添加了一个NOT NULL 约束：
+ALTER TABLE Customers
+MODIFY Email varchar(100) NOT NULL;
+
+//ALTER TABLE - ADD CONSTRAINT 约束 
+要向现有表中添加约束，使用以下语法：
+ALTER TABLE table_name
+ADD CONSTRAINT constraint_name constraint_definition;
+以下 SQL 语句添加了一个名为“CHK_Age”的约束，该CHECK约束  确保“Age”列的值大于等于 18：
+ALTER TABLE Members
+ADD CONSTRAINT CHK_Age CHECK (Age >= 18);
+
+//ALTER TABLE - 重命名表
+要重命名表，使用以下语法：
+ALTER TABLE table_name RENAME TO new_table_name;
+以下 SQL 语句将“Customers”表重命名为“Clients”：
+ALTER TABLE Customers RENAME TO Clients;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
