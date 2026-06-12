@@ -1,3 +1,79 @@
+SQL聚合函数
+聚合函数是对  一组值  执行计算并 返回单个值的函数。
+GROUP BY聚合函数通常与语句的 `INSERT` 子句一起使用SELECT 。
+`INSERT`GROUP BY子句  将结果集 拆分成 若干组值，而聚合函数可以为 每个组返回一个单独的值。
+最常用的 SQL 聚合函数有：
+MIN()返回列中的最小值
+MAX()返回列中的最大值
+
+COUNT()返回集合中的行数
+
+SUM()返回数值列的总和
+AVG()返回数值列的平均值
+聚合函数会忽略空值（除了COUNT(*)）。
+
+1.MIN() 函数
+该MIN()函数返回所选列的最小值。
+该MIN()函数可处理 数值、字符串和日期数据类型。
+SELECT MIN(Price) FROM Products;
+SELECT MIN(column_name列名) FROM table_name WHERE condition;
+
+//设置列名（别名）
+使用时MIN()，返回的列 将没有名称。
+使用 AS关键字为列指定一个描述性名称：
+SELECT MIN(Price) AS SmallestPrice FROM Products; 返回的最小值并叫做smallestprice
+
+//对日期列使用 MIN() 函数
+以下 SQL 语句返回Employees表中 BirthDate 列中最早的 BirthDate 值：
+SELECT MIN(BirthDate) AS EarliestBirthdate FROM Employees;
+
+//将 MIN() 与 GROUP BY 结合使用
+这里我们使用MIN()函数和 GROUP BY子句，返回产品表中 每个类别的最低价格：
+SELECT MIN(Price) AS SmallestPrice, CategoryID
+FROM Products GROUP BY CategoryID;
+
+2. MAX() 函数
+该MAX()函数返回所选列中的最大值。
+该MAX()函数可处理数值、字符串和日期数据类型。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 MySQL 支持哪些类型的连接（JOIN）
 1. INNER JOIN（内连接）
 返回两个表中匹配的记录。
