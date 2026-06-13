@@ -148,7 +148,71 @@ SELECT AVG(Price) AS AveragePrice, CategoryID
 FROM Products
 GROUP BY CategoryID;
 
+5.LIKE 运算符
+该LIKE运算符用于子句中， WHERE以在列的文本数据中搜索指定的模式。
+通常有  两个通配符与运算符  一起使用 LIKE：
+/百分号%- 表示零个、一个或多个字符
+/下划线符号_- 代表一个字符
+以下 SQL 语句选择所有以字母“a”开头的客户：
+SELECT * FROM Customers
+WHERE CustomerName LIKE 'a%';
+语法
+SELECT column1, column2, ...
+FROM table_name WHERE columnN LIKE pattern;
+% 通配符
+通配符%代表 任意数量的字符，甚至包括  零个字符。
+返回所有来自包含字符序列“on”的城市的客户：
+SELECT * FROM Customers
+WHERE city LIKE '%on%';      (注意前后双%%的用法)
 
+_ 单字符Wildcard通配符
+通配符_代表单个字符。
+它可以是 任何字符或数字，但每个字符_或数字都只 代表一个字符。
+返回所有城市名称以“l”开头，后跟一个通配符，再后跟 “nd”，最后跟 两个通配符的客户：
+SELECT * FROM Customers
+WHERE city LIKE 'l_nd__';
+
+以字母开头
+要返回以 特定字母或短语开头的记录，请在   字母或短语末尾添加%。
+返回所有以“La”开头的客户：
+SELECT * FROM Customers
+WHERE CustomerName LIKE 'La%';  短语末尾
+/还可以使用OR和and运算符组合任意数量的条件
+返回所有以“a”或“b”开头的客户：
+SELECT * FROM Customers
+WHERE CustomerName LIKE 'a%' OR CustomerName LIKE 'b%';
+
+以字母结尾
+要返回以特定字母或短语结尾的记录，请在 字母或短语的开头添加%。
+返回所有以“a”结尾的客户：
+SELECT * FROM Customers
+WHERE CustomerName LIKE '%a';
+
+还可以将“以字母开头”和“以字母结尾”结合起来使用：
+返回所有以“b”开头并以“s”结尾的客户：
+SELECT * FROM Customers
+WHERE CustomerName LIKE 'b%s';
+
+包含双%%
+要返回包含特定字母或短语的记录，请 在字母或短语前后  都加上%。
+返回所有 包含短语“or”的客户
+SELECT * FROM Customers
+WHERE CustomerName LIKE '%or%';
+
+组合通配符
+任何通配符，例如%和_都可以与其他通配符 组合使用。
+返回所有以“a”开头且长度至少为3个字符的客户：
+SELECT * FROM Customers
+WHERE CustomerName LIKE 'a__%';
+返回所有第二个字母为“r”的客户：
+SELECT * FROM Customers
+WHERE CustomerName LIKE '_r%';
+
+不使用通配符
+如果没有 指定通配符，则短语必须 完全匹配才能返回结果。
+退回所有来自西班牙的客户：
+SELECT * FROM Customers
+WHERE Country LIKE 'Spain';
 
 
 
