@@ -1,0 +1,156 @@
+1.自增字段AUTO_INCREMENT
+自增字段是一个数值列，当向表中插入新记录时，它会自动生成  一个唯一的数字。
+自增字段通常是我们希望在  每次插入新记录PRIMARY KEY时自动分配 唯一编号的字段。 
+MySQL 使用AUTO_INCREMENT关键字来实现 自动递增功能。
+以下 SQL 语句将“Personid”列定义为“Persons”表中的 自增主键字段：
+CREATE TABLE Persons (
+    Personid int AUTO_INCREMENT PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int
+);
+默认起始值AUTO_INCREMENT​​为 1，每新增一条记录，该值将递增 1。
+要使用AUTO_INCREMENT另一个值作为 起始值，请使用以下 SQL 语句：
+ALTER TABLE Persons AUTO_INCREMENT = 100;
+当我们在“Persons”表中插入新记录时，无需为“Personid”列指定值（系统会自动添加唯一值）：
+INSERT INTO Persons (FirstName, LastName)
+VALUES ('Lars', 'Monsen');
+上面的 SQL 语句会将一条新记录插入到“Persons”表中，“Personid”列将自动分配下一个唯一的数字。
+
+SQL Server 使用该IDENTITY关键字来实现自动递增功能。
+以下 SQL 语句将“Personid”列定义为“Persons”表中的自增主键字段：
+CREATE TABLE Persons (
+    Personid int IDENTITY(1,1) PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int
+);
+在上面的例子中，起始值 IDENTITY为 1，每新增一条记录，该值将递增 1。
+提示：要指定“Personid”列的值从 10 开始，每次递增 5，请将其更改为IDENTITY(10,5)。
+当我们在“Persons”表中插入新记录时，无需为“Personid”列指定值（系统会自动添加唯一值）：
+INSERT INTO Persons (FirstName, LastName)
+VALUES ('Lars', 'Monsen');
+上面的 SQL 语句会将一条新记录插入到“Persons”表中，“Personid”列将自动分配下一个唯一的数字。
+
+2.日期
+在数据库中 处理日期时，最困难的部分是确保 要插入/选择的日期格式与 数据库中日期列的格式相匹配。
+SQL 日期数据类型
+不同的 SQL 数据库使用 不同的数据类型来存储 日期和时间值。
+MySQL具有以下日期数据类型：
+DATE格式为 YYYY-MM-DD
+DATETIME格式：YYYY-MM-DD HH:MI:SS
+TIMESTAMP格式：YYYY-MM-DD HH:MI:SS
+TIME格式：HH:MI:SS
+YEAR- 格式为 YYYY 或 YY
+
+/SQL Server具有以下日期数据类型：
+DATE格式为 YYYY-MM-DD
+DATETIME格式：YYYY-MM-DD HH:MI:SS
+SMALLDATETIME格式：YYYY-MM-DD HH:MI:SS
+TIME格式：HH:MI:SS
+TIMESTAMP格式：一个唯一的数字
+注意：日期数据类型是在数据库中 创建新表时为列定义的。
+
+SQL 处理日期
+请查看下表：
+订单表
+OrderId	ProductName	OrderDate
+1	Geitost	2025-11-11
+2	Camembert Pierrot	2025-11-09
+3	Mozzarella di Giovanni	2025-11-11
+4	Mascarpone Fabioli	2025-10-29
+现在我们要从上面的表格中选择 订单日期为“2025-11-11”的记录。
+我们使用以下SELECT声明：
+SELECT * FROM Orders WHERE OrderDate='2025-11-11'
+结果集将如下所示：
+OrderId	ProductName	OrderDate
+1	Geitost	2025-11-11
+3	Mozzarella di Giovanni	2025-11-11
+注意：如果两个日期不涉及时间因素，则很容易进行比较！
+现在，假设“订单”表如下所示（请注意“订单日期”列中添加的 时间部分）：
+OrderId	ProductName    OrderDate
+1	Geitost	          2025-11-11 13:23:44
+2	Camembert Pierrot	2025-11-09 15:45:21
+3	Mozzarella di Giovanni	2025-11-11 11:12:01
+4	Mascarpone Fabioli	2025-10-29 14:56:59
+如果我们沿用SELECT上述同样的表述：
+SELECT * FROM Orders WHERE OrderDate='2025-11-11'
+我们将得不到任何结果！这是因为查询只查找日期， 不包含时间部分。
+提示：为了保持查询简单易维护，除非必要，//否则不要在日期中使用 时间组成部分！
+
+3.创建视图VIEW       CREATE VIEW 语句
+SQL视图是基于SQL语句结果集的 虚拟表。SQL视图包含行和列就像 真实表一样。
+视图中的字段来自数据库中 一个或多个真实表。
+可以向视图中 添加 SQL 语句和函数，并将数据呈现为来自 单个表的数据。
+通过该语句创建视图CREATE VIEW。
+CREATE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name WHERE condition;
+注意：视图始终显示 实时数据！数据库引擎仅 存储视图的定义（SELECT 语句），而不是 数据副本。
+创建视图示例
+以下 SQL 语句创建一个名为“巴西客户”的视图，该视图显示 所有来自巴西的客户：
+CREATE VIEW [Brazil Customers] AS
+SELECT CustomerName, ContactName
+FROM Customers
+WHERE Country = 'Brazil';
+要查询上述视图，请使用以下 SQL 语法：
+SELECT * FROM [Brazil Customers];           （查询视图）                   
+以下 SQL 语句创建一个名为“高于平均价格的产品”的视图，该视图选择“产品”表中价格高于平均价格的所有产品：
+CREATE VIEW [Products Above Average Price] AS
+SELECT ProductName, Price
+FROM Products
+WHERE Price > (SELECT AVG(Price) FROM Products);
+要查询上述视图，请使用以下 SQL 语法：
+SELECT * FROM [Products Above Average Price];
+
+ALTER VIEW 语句（SQL Server）
+在 SQL Server 中，可以使用ALTER VIEW语句更新视图。
+
+//更新视图ALTER VIEW 语法
+在 SQL Server 中，可以使用ALTER VIEW语句更新视图。
+ALTER VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+以下 SQL 语句将“City”列添加到“Brazil Customers”视图中：
+ALTER VIEW [Brazil Customers] AS
+SELECT CustomerName, ContactName, City
+FROM Customers
+WHERE Country = 'Brazil';
+
+CREATE OR REPLACE VIEW 语句（MySQL 和 Oracle）
+在 MySQL 和 Oracle 中，可以使用语句更新视图CREATE OR REPLACE VIEW。
+
+创建或替换 视图语法（MySQL 和 Oracle）
+在 MySQL 和 Oracle 中，可以使用语句更新 视图CREATE OR REPLACE VIEW。
+CREATE OR REPLACE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+以下 SQL 语句将“City”列添加到“Brazil Customers”视图中：
+CREATE OR REPLACE VIEW [Brazil Customers] AS
+SELECT CustomerName, ContactName, City
+FROM Customers
+WHERE Country = 'Brazil';
+
+//删除视图
+该DROP VIEW 语句会删除一个视图。
+下拉视图语法
+DROP VIEW view_name;
+以下 SQL 语句删除“巴西客户”视图：
+DROP VIEW [Brazil Customers];
+
+4.
+
+
+
+
+
+
+
+
+
+
+
+
+
