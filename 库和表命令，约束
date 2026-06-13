@@ -142,18 +142,82 @@ ALTER TABLE table_name RENAME TO new_table_name;
 以下 SQL 语句将“Customers”表重命名为“Clients”：
 ALTER TABLE Customers RENAME TO Clients;
 
+8.SQL约束
+是表中数据的规则。
+约束用于 防止向表中插入 无效数据，并确保表中 数据的准确性和可靠性。
+如果 约束与数据操作 之间存在任何冲突，则该操作将被中止。
+约束条件可以通过两种方式指定：
+//当创建表时（通过语句 CREATE TABLE）             可以在列名后添加约束
+//创建表之后（通过ALTER TABLE 语句）
 
+SQL约束类型
+以下约束条件在 SQL 中很常用：
+NOT NULL确保列不能包含 NULL 值
+UNIQUE确保列中的所有值都是唯一的。
+PRIMARY KEY- 唯一标识表中的每一行（a NOT NULL和的组合UNIQUE）
+FOREIGN KEY - 在两个表中建立数据链接，并防止执行会破坏该链接的操作。
+CHECK确保列中的值满足特定条件
+DEFAULT- 如果未指定列值，则设置列的默认值。
+CREATE INDEX- 在列上创建索引，以便更快地从数据库中检索数据
 
+9.创建表时NOT NULL 约束（通过语句 CREATE TABLE）
+该NOT NULL约束强制列不能接受 NULL 值。这意味着字段必须始终包含一个值，
+也就是说，如果不向该字段 添加值，则无法插入 新记录或更新记录。
+/默认情况下，列可以包含 NULL 值。
+创建表时 NOT NULL
+NOT NULL创建表时，要定义约束，请在 列名称的  数据类型后添加 NOT NULL。
+以下 SQL 语句创建了一个名为“Persons”的表，并确保“ID”、“LastName”和“FirstName”列不能接受 NULL 值：
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255) NOT NULL,
+    Age int
+);
 
+创建表之后NOT NULL （ ALTER TABLE 语句)
+NOT NULL要对现有表定义约束，请ALTER TABLE 在列名称的数据类型后添加 NOT NULL。
+以下 SQL 语句NOT NULL在“Persons”表创建完成后，对“Age”列添加约束：
+SQL Server/MS Access 的语法：
+ALTER TABLE Persons ALTER COLUMN Age int NOT NULL;
+MySQL 语法：
+ALTER TABLE Persons MODIFY COLUMN Age int NOT NULL;
 
+移除 NOT NULL 约束       (双ALTER，ALTER MODIFY)
+要移除NOT NULL列的约束（使该列 再次接受 NULL 值），请使用以下语法：
+SQL Server/MS Access 的语法：
+ALTER TABLE Persons ALTER COLUMN Age int NULL;
+MySQL 语法：
+ALTER TABLE Persons MODIFY COLUMN Age int NULL;
 
-
-
-
-
-
-
-
+10.唯一约束
+该UNIQUE约束确保  列中的所有值都是唯一的。
+UNIQUE`and`约束PRIMARY KEY都能保证列或列集的唯一性。但是，UNIQUE每个表可以有多个约束，但 PRIMARY KEY每个表只能有一个 `contains` 约束。
+创建表时的  唯一约束
+以下 SQL 语句定义了UNIQUE在创建“Persons”表时“ID”列的约束：
+SQL Server / Oracle / MS Access：
+CREATE TABLE Persons (
+    ID int NOT NULL UNIQUE,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int
+);
+MySQL：
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    UNIQUE (ID)
+);
+命名唯一约束
+要命名UNIQUE约束，以及定义 UNIQUE对多个列的约束，请使用以下 SQL 语法：
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT UC_Person UNIQUE (ID,LastName)
+);
 
 
 
