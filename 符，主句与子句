@@ -46,5 +46,55 @@ ShipperID	ShipperName	Phone
 1	Speedy Express	(503) 555-9831
 2	United Package	(503) 555-3199
 
+二、符 
+语法方式
+运算符  通配符
+任意运算符
+EXISTS 运算符
+ALL 运算符
+UNION运算符
+UNION ALL 运算符
+LIKE运算符
+ IN运算符
+BETWEEN运算符
+
+三、函数 空函数
+空函数
+聚合函数是对一组值执行计算并返回单个值的函数。MIN()MAX()COUNT()
+
+
+
+三、主句
+想要进行的操作用主句实现
+SELECT语句用于从数据库中选择数据。
+SELECT DISTINCT语句用于仅返回不同的（唯一的）值。
+SELECT INTO 语句
+
+INSERT INTO语句用于向表中插入新记录。
+INSERT INTO SELECT语句
+
+UPDATE语句用于更新或修改表中的一条或多条记录。
+DELETE语句用于删除表中已有的记录。
+
+SELECT TOP、LIMIT 和 FETCH FIRST用于限制要返回的记录数
+
+四、子句
+用来写指定限制约束条件
+WHERE子句
+other by
+group by分组
+having包含
+JOIN子句用于  根据两个或多个表中的相关列合并来自这两个或多个表的行。
+ORDER BY关键字用于按升序或降序对结果集进行排序
+
+
+五、 CASE 表达式
+
+
+
+
+
+
+
 
 
