@@ -1,7 +1,288 @@
- 1.主键约束
-该PRIMARY KEY约束条件唯一标识数据库表中的每一条记录。
-约束确保值的唯一性，并且不能包含 NULL 值（它是约束和 约束PRIMARY KEY的组合）。UNIQUENOT NULL
+SQL约束
+是表中数据的规则。
+约束用于 防止向表中插入 无效数据，并确保表中 数据的准确性和可靠性。
+如果 约束与数据操作 之间存在任何冲突，则该操作将被中止。
+约束条件可以通过两种方式指定：
+//当创建表时（通过语句 CREATE TABLE）             可以在列名后添加约束
+//创建表之后（通过ALTER TABLE 语句）
 
+SQL约束类型
+以下约束条件在 SQL 中很常用：
+NOT NULL确保列不能包含 NULL 值
+UNIQUE确保列中的所有值都是唯一的。
+PRIMARY KEY- 唯一标识表中的每一行（a NOT NULL和的组合UNIQUE）
+FOREIGN KEY - 在两个表中建立数据链接，并防止执行会破坏该链接的操作。
+CHECK确保列中的值满足特定条件
+DEFAULT- 如果未指定列值，则设置列的默认值。
+CREATE INDEX- 在列上创建索引，以便更快地从数据库中检索数据
+
+1.创建表时NOT NULL 约束（通过语句 CREATE TABLE）
+该NOT NULL约束强制列不能接受 NULL 值。这意味着字段必须始终包含一个值，
+也就是说，如果不向该字段 添加值，则无法插入 新记录或更新记录。
+/默认情况下，列可以包含 NULL 值。
+创建表时 NOT NULL
+NOT NULL创建表时，要定义约束，请在 列名称的  数据类型后添加 NOT NULL。
+以下 SQL 语句创建了一个名为“Persons”的表，并确保“ID”、“LastName”和“FirstName”列不能接受 NULL 值：
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255) NOT NULL,
+    Age int
+);
+
+创建表之后NOT NULL （ ALTER TABLE 语句)
+NOT NULL要对现有表定义约束，请ALTER TABLE 在列名称的数据类型后添加 NOT NULL。
+以下 SQL 语句NOT NULL在“Persons”表创建完成后，对“Age”列添加约束：
+SQL Server/MS Access 的语法：
+ALTER TABLE Persons ALTER COLUMN Age int NOT NULL;
+MySQL 语法：
+ALTER TABLE Persons MODIFY COLUMN Age int NOT NULL;
+
+移除 NOT NULL 约束       (双ALTER，ALTER MODIFY)
+要移除NOT NULL列的约束（使该列 再次接受 NULL 值），请使用以下语法：
+SQL Server/MS Access 的语法：
+ALTER TABLE Persons ALTER COLUMN Age int NULL;
+MySQL 语法：
+ALTER TABLE Persons MODIFY COLUMN Age int NULL;
+
+2.唯一约束
+该UNIQUE约束确保  列中的所有值都是唯一的。
+UNIQUE`and`约束PRIMARY KEY都能保证列或列集的唯一性。但是，UNIQUE每个表可以有多个约束，但 PRIMARY KEY每个表只能有一个 `contains` 约束。
+创建表时的  唯一约束
+以下 SQL 语句定义了UNIQUE在创建“Persons”表时“ID”列的约束：
+SQL Server / Oracle / MS Access：
+CREATE TABLE Persons (
+    ID int NOT NULL UNIQUE,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int
+);
+MySQL：
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    UNIQUE (ID)
+);
+命名唯一约束
+要命名UNIQUE约束，以及定义 UNIQUE对多个列的约束，请使用以下 SQL 语法：
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT UC_Person UNIQUE (ID,LastName)
+);
+
+3.主键约束PRIMARY KEY
+该PRIMARY KEY约束条件  唯一标识数据库表中的每一条记录。
+约束确保 值的唯一性，并且 不能包含 NULL 值（它是约束UNIQUENOT NULL和 约束PRIMARY KEY的组合）。
 一个表只能有一个PRIMARY KEY 约束。主键可以是单个列，也可以是多个列的组合。
-提示：主键是其他表中约束的目标 （这可以强制两个表中的数据之间的引用完整性）。 FOREIGN KEY
+提示：主键是其他表中约束 FOREIGN KEY的目标 （这可以强制两个表中的数据之间的引用完整性）。
+
+创建表时的主键
+以下 SQL 语句会PRIMARY KEY在创建“Persons”表时，对“ID”列创建一个引用：
+CREATE TABLE Persons (
+    ID int PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int
+);
+多列主键
+要对多个列定义未命名 PRIMARY KEY约束，请使用以下 SQL 语法：
+CREATE TABLE Persons (
+    ID int,
+    LastName varchar(255),
+    FirstName varchar(255),
+    Age int,
+    PRIMARY KEY (ID, LastName)
+);
+在上面的示例中，该 PRIMARY KEY值由两列组成（ID + LastName）。
+要对多个列定义命名 PRIMARY KEY约束，请使用以下 SQL 语法
+CREATE TABLE Persons (
+    ID int,
+    LastName varchar(255),
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT PK_Person PRIMARY KEY (ID, LastName)
+);
+注意：在上面的示例中， PRIMARY KEY名称为“PK_Person”，其值由两列（ID + LastName）组成。
+
+创建表时的主键ALTER TABLE 语句
+PRIMARY KEY如果表已经创建，要对“ID”列创建约束，请使用以下 SQL：
+ALTER TABLE Persons
+ADD PRIMARY KEY (ID);
+多列主键
+要对多个列定义命名 PRIMARY KEY约束，请使用以下 SQL 语法：
+ALTER TABLE Persons
+ADD CONSTRAINT PK_Person PRIMARY KEY (ID, LastName);
+注意：当使用此功能ALTER TABLE添加主键时，创建表时必须将主键列声明为 NOT NULL。
+
+删除主键约束
+要删除PRIMARY KEY约束，请使用以下 SQL：
+SQL Server / Oracle / MS Access：
+ALTER TABLE Persons DROP CONSTRAINT PK_Person;
+MySQL：
+ALTER TABLE Persons DROP PRIMARY KEY;
+
+4.SQL外键约束
+该FOREIGN KEY约束在 两个表之间 建立链接，并防止执行 会破坏它们之间链接的操作。
+FOREIGN KEY是 表中引用另一个表中的PRIMARY KEY 列。
+带有外键列的表 称为子表，带有主键列的表 称为被引用表或父表。
+该FOREIGN KEY约束防止将 无效数据插入到外键列（子表中），因为 该值必须存在于父表中。
+该FOREIGN KEY约束还可以防止您 删除父表中的记录，如果子表中仍然存在相关的行。
+假设我们有两个表格：
+人员桌
+PersonID	LastName	FirstName	Age
+1	Hansen	Ola	30
+2	Svendson	Tove	23
+订单表
+OrderID	OrderNumber	PersonID
+3	22456	2
+4	24562	1
+在这里我们可以看到，“Orders”表中的“PersonID”列指向“Persons”表中的“PersonID”列。
+“Persons”表中的“PersonID”列位于PRIMARY KEY“Persons”表中。
+“订单”表中的“PersonID”列位于 FOREIGN KEY“订单”表中。
+创建表时使用外键FOREIGN KEY
+以下 SQL 语句FOREIGN KEY 在创建“Orders”表时，对“PersonID”列创建一个约束：
+CREATE TABLE Orders (
+    OrderID int PRIMARY KEY,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    CONSTRAINT fk_Person
+    FOREIGN KEY (PersonID)
+    REFERENCES Persons(PersonID)
+);
+创建表后外键ALTER TABLE 语句
+在创建“Orders”表之后，要FOREIGN KEY对“PersonID”列创建约束，请使用以下 SQL：
+ALTER TABLE Orders
+ADD CONSTRAINT fk_Person
+FOREIGN KEY (PersonID)
+REFERENCES Persons(PersonID);
+
+//删除外键约束
+要删除FOREIGN KEY约束，请使用以下 SQL：
+SQL Server / Oracle / MS Access：
+ALTER TABLE Orders
+DROP CONSTRAINT fk_Person;
+MySQL：
+ALTER TABLE Orders
+DROP FOREIGN KEY fk_Person;
+
+5.CHECK 约束
+约束条件CHECK用于确保列中的值满足特定条件。
+该CHECK约束条件会将数据评估为 TRUE 或 FALSE。如果数据评估为 TRUE，则操作成功。如果数据评估为 FALSE，则整个 INSERT 或 UPDATE 操作将中止，并引发错误。
+检查 CREATE TABLE 的约束
+以下 SQLCHECK在创建“Persons”表时，对“Age”列创建约束。
+此处的CHECK约束条件确保“年龄”列的值必须为 18 或以上：
+CREATE TABLE Persons (
+    ID int PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int CHECK (Age >= 18)
+);
+
+命名 CHECK 约束
+要命名CHECK约束，以及定义 CHECK对多个列的约束，请使用以下 SQL 语法：
+CREATE TABLE Persons (
+    ID int PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255),
+    CONSTRAINT chk_PersonAge CHECK (Age >= 18 AND City = 'Sandnes')
+);
+
+检查 ALTER TABLE 的约束
+CHECK如果表已创建，要对“年龄”列创建约束，请使用以下 SQL：
+ALTER TABLE Persons
+ADD CHECK (Age >= 18);
+命名 CHECK 约束
+要命名CHECK约束，以及定义 CHECK对多个列的约束，请使用以下 SQL 语法：
+ALTER TABLE Persons
+ADD CONSTRAINT chk_PersonAge CHECK (Age >= 18 AND City = 'Sandnes');
+
+删除 CHECK 约束
+要删除CHECK约束，请使用以下 SQL：
+SQL Server / Oracle / MS Access：
+ALTER TABLE Persons
+DROP CONSTRAINT chk_PersonAge;
+MySQL：
+ALTER TABLE Persons
+DROP CHECK chk_PersonAge;
+
+6.默认约束DEFAULT
+DEFAULT如果 未指定列的值，则可以使用此约束 自动插入默认值。
+默认值将添加到 所有新记录中（如果没有指定其他值）。
+创建表时的默认约束
+以下 SQL 语句DEFAULT在创建“Persons”表时为“City”列设置值：
+CREATE TABLE Persons (
+    ID int PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255) DEFAULT 'Sandnes'
+);
+该DEFAULT约束还可以用于插入 系统值，例如使用函数插入当前日期： CURRENT_DATE()
+MySQL：
+CREATE TABLE Orders (
+    ID int PRIMARY KEY,
+    OrderNumber int NOT NULL,
+    OrderDate date DEFAULT CURRENT_DATE()
+);
+创建表后ALTER TABLE 的默认约束
+DEFAULT如果表已创建，要对“City”列定义约束，请使用以下 SQL：
+MySQL：
+ALTER TABLE Persons
+ALTER City SET DEFAULT 'Sandnes';
+SQL Server：
+ALTER TABLE Persons
+ADD CONSTRAINT df_City DEFAULT 'Sandnes' FOR City;
+删除默认约束
+要删除DEFAULT约束，请使用以下 SQL：
+MySQL：
+ALTER TABLE Persons
+ALTER City DROP DEFAULT;
+
+7.CREATE INDEX 语句
+该CREATE INDEX语句用于在数据库的表上 创建索引，以 加快数据检索速度。
+用户看不到 索引，索引只是 用来加快搜索/查询速度的。
+注意：更新带有 索引的表比更新 不带索引的表更耗时（因为索引本身也需要更新）。因此，/仅对经常被搜索的列创建索引。
+索引类型：非唯一索引和 唯一索引
+索引有两种类型：
+CREATE INDEX- 创建 非唯一索引（允许重复值）
+CREATE UNIQUE INDEX- 创建 唯一索引（不允许重复值）
+创建索引语法
+CREATE INDEX index_name
+ON table_name (column1, column2, ...);                  （on）
+创建唯一索引语法
+CREATE UNIQUE INDEX index_name
+ON table_name (column1, column2, ...);
+注意：不同数据库 创建索引的语法有所不同。请务必查看您所用数据库的索引创建语法！
+创建索引示例
+以下 SQL 语句在“Persons”表的“LastName”列上创建一个名为“idx_lastname”的非唯一索引：
+CREATE INDEX idx_lastname
+ON Persons (LastName);
+如果要基于 多列组合创建索引，可以将列名列在括号内，并用逗号分隔：
+CREATE INDEX idx_lname_fname
+ON Persons (LastName, FirstName);
+删除索引语句
+该DROP INDEX语句用于删除索引。
+SQL Server：
+DROP INDEX table_name.index_name;
+MySQL：
+ALTER TABLE table_name
+DROP INDEX index_name;
+
+
+
+
+
+
+
+
+
+
+
 
