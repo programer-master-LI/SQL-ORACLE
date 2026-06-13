@@ -1,1 +1,211 @@
+1. IN 运算符
+该IN运算符用于WHERE子句中，以检查 指定列的值是否与提供的列表中的 任何值匹配。
+/该IN运算符可作为 多个OR条件的简写，使查询更短、更易读。
+以下 SQL 语句使用IN运算符选择来自 德国、法国或英国的所有客户：
+SELECT * FROM Customers
+WHERE Country IN ('Germany', 'France', 'UK');
+对比or条件
+以下 SQL 语句使用多个OR条件来选择来自德国、法国或英国的所有客户（结果相同，但代码更长）：
+SELECT * FROM Customers
+WHERE Country = 'Germany' OR Country = 'France' OR Country = 'UK';
+语法
+SELECT column_name(s) FROM table_name
+WHERE column_name IN (value1, value2, ...);
+
+NOT IN 运算符
+使用该NOT IN运算符，您可以返回列表中所有  不包含任何值的记录。
+退回所有  非来自“德国”、“法国”或“英国”的客户：
+SELECT * FROM Customers
+WHERE Country NOT IN ('Germany', 'France', 'UK');
+
+IN (SELECT)
+也可以IN在子句中使用子查询WHERE。
+通过子查询，您可以返回 主查询中所有存在于 子查询结果中的记录。
+以下 SQL 语句返回所有在“Orders”表中也有订单的客户：
+SELECT * FROM Customers
+WHERE CustomerID IN (SELECT CustomerID FROM Orders);
+
+NOT IN (SELECT)
+上述示例的结果返回了 74 条记录，这意味着有 17 位客户尚未下单。
+让我们使用运算符来验证一下是否正确NOT IN。
+以下 SQL 语句返回“Orders”表中  没有任何订单的所有客户：
+SELECT * FROM Customers
+WHERE CustomerID NOT IN (SELECT CustomerID FROM Orders);
+
+2.BETWEEN 运算符
+该BETWEEN运算符用于子句中WHERE，以选择指定范围内的值。
+该范围包含起始值和结束值——结果中包含范围的起始值和结束值。
+这些值可以是数字、文本或日期。
+选择价格在 10 到 20 之间的所有产品：
+SELECT * FROM Products
+WHERE Price BETWEEN 10 AND 20;
+语法
+SELECT column_name(s)
+FROM table_name
+WHERE column_name BETWEEN value1 AND value2;
+
+NOT BETWEEN指定范围之外的值不在某某范围
+NOT BETWEEN运算符用于子句中WHERE，以选择指定范围之外的值。
+以下 SQL 语句返回价格不在 10 到 20 之间的所有产品：
+SELECT * FROM Products
+WHERE Price NOT BETWEEN 10 AND 20;
+
+BETWEEN with IN  带有IN的BETWEEN
+以下 SQL 语句返回价格在 10 到 20 之间的所有产品。此外，CategoryID 必须为 1、2 或 3：
+SELECT * FROM Products
+WHERE Price BETWEEN 10 AND 20
+AND CategoryID IN (1,2,3);
+
+BETWEEN Text Values文本值之间
+以下 SQL 语句选择 ProductName 按字母顺序介于“Geitost”和“Louisiana Hot Spiced Okra”之间的所有产品：
+SELECT * FROM Products
+WHERE ProductName BETWEEN 'Geitost' AND 'Louisiana Hot Spiced Okra'
+ORDER BY ProductName;
+
+not BETWEEN Text Values不在文本值之间
+以下 SQL 语句选择 ProductName 不在“Geitost”和“Louisiana Hot Spiced Okra”之间的所有产品：
+SELECT * FROM Products
+WHERE ProductName NOT BETWEEN 'Geitost' AND 'Louisiana Hot Spiced Okra'
+ORDER BY ProductName;
+
+日期之间BETWEEN ...AND..
+该BETWEEN运算符可用于筛选特定日期或时间段内的记录。请确保日期格式与数据库匹配（例如“YYYY-MM-DD”）。
+以下 SQL 语句选择 1996 年 7 月的所有订单：
+SELECT * FROM Orders
+WHERE OrderDate BETWEEN '1996-07-01' AND '1996-07-31';
+
+3.运算符分为以下几种类型：
+算术运算符
+比较运算符
+复合运算符
+位运算符
+逻辑运算符
+1.SQL算术运算符
++	Addition	 -	Subtraction	
+*	Multiplication	 /	Division	
+%	Modulus 模运算
+2.比较运算符
+=	Equal to	    >	Greater than	  <	Less than	
+>=	Greater than or equal to	<=	Less than or equal to	
+<>	Not equal to
+3.位运算符
+&	Bitwise AND    |	Bitwise OR
+^	Bitwise exclusive OR    ~	Bitwise NOT
+4.复合运算符
++=	Add equals       -=	Subtract equals
+*=	Multiply equals  /=	Divide equals   %=	Modulo equals
+&=	Bitwise AND equals             等于
+^=	Bitwise exclusive equals
+|*=	Bitwise OR equals
+5.逻辑运算符
+ALL	TRUE if all of the subquery values meet the condition	
+AND	TRUE if all the conditions separated by AND is TRUE	
+ANY	TRUE if any of the subquery values meet the condition	
+BETWEEN	TRUE if the operand is within the range of comparisons	
+EXISTS	TRUE if the subquery returns one or more records	
+IN	TRUE if the operand is equal to one of a list of expressions	
+LIKE	TRUE if the operand matches a pattern	
+NOT	Displays a record if the condition(s) is NOT TRUE	
+OR	TRUE if any of the conditions separated by OR is TRUE	
+SOME	TRUE if any of the subquery values meet the condition
+
+4.注释
+用于解释 SQL 代码，或 暂时阻止 SQL 代码的执行（用于调试）。
+数据库引擎会忽略注释。
+SQL 支持单行注释--和多行注释/* */。
+注意： Microsoft Access 数据库不支持注释。
+//SQL 单行注释
+单行注释以--空格开始，到行尾结束。
+-行首及之后的所有文本都将被忽略。
+以下示例使用单行注释进行解释：
+-- Selects all German customers  整行注释掉了
+SELECT * FROM Customers
+WHERE Country = 'Germany';
+以下示例使用单行注释来注释掉行尾：
+SELECT * FROM Customers -- WHERE City='Berlin';  where后的注释掉了
+//SQL多行注释
+多行注释以句点开头/*，以句点结尾 */。
+/*和 之间的任何文本*/都将被忽略。
+以下示例使用多行注释进行解释：
+/* Selects all German customers
+from Berlin */
+SELECT * FROM Customers
+WHERE Country = 'Germany' AND City = 'Berlin';
+要忽略 SQL 代码的一部分，还可以使用多行注释：
+SELECT CustomerName, /*City,*/ Country FROM Customers;
+用多行注释来忽略 SQL 语句的一部分：
+SELECT * FROM Customers WHERE (CustomerName LIKE 'L%'
+OR CustomerName LIKE 'R%' /*OR CustomerName LIKE 'S%'
+OR CustomerName LIKE 'T%'*/ OR CustomerName LIKE 'W%')
+
+5.什么是存储过程？CREATE PROCEDURE语句
+存储过程是 预先编译好的 SQL 代码，可以保存并重复使用。
+如果你经常需要 编写同一个 SQL 查询语句，可以 将其保存为存储过程，然后 直接调用它来执行。
+存储过程也可以 有参数，因此它可以根据 传递的参数值来执行操作。
+
+存储过程的主要优势
+存储过程广泛应用于数据库管理，具有以下优点：
+代码重用性——同一个过程可以从各种应用程序中调用。
+性能提升——存储过程已预编译，运行速度更快。
+数据库安全 - 您可以设置用户运行特定过程的权限（限制对表的直接访问）
+易于维护 - 更新程序时，它会自动更新其所有使用情况。
+//存储过程语法（SQL Server）
+要创建存储过程，使用以下CREATE PROCEDURE语句：
+CREATE PROCEDURE procedure_name
+  @param1 datatype,
+  @param2 datatype
+AS
+BEGIN
+  -- SQL_statements to be executed
+  SELECT column1, column2
+  FROM table_name
+  WHERE columnN = @paramN;
+END;
+
+执行存储过程
+要运行存储过程，请使用以下EXEC 语句：
+EXEC procedure_name @param1 = 'value1', @param2 = 'value2';
+
+删除存储过程DROP PROCEDURE语句：
+DROP PROCEDURE procedure_name;
+提示：为确保DROP PROCEDURE在 缺少该过程时不会返回错误，请添加以下IF EXISTS子句：
+DROP PROCEDURE IF EXISTS procedure_name;
+
+存储过程示例
+以下 SQL 创建一个名为“GetCustomersByCity”的存储过程，
+该存储过程可用于从“Customers”表中选择特定城市的客户：
+CREATE PROCEDURE GetCustomersByCity
+  @City nvarchar(50)
+AS
+BEGIN
+  SELECT * FROM Customers
+  WHERE City = @City;
+END;
+这里我们通过传递城市（“伦敦”）作为参数来执行存储过程，存储过程会从“Customers”表中返回相关详细信息：
+EXEC GetCustomersByCity @City = 'London';
+带多个参数的存储过程
+添加多个参数很简单。只需列出每个参数及其数据类型，并用逗号分隔，如下所示。
+以下 SQL 语句创建一个存储过程，该过程从“Customers”表中选择特定城市、特定邮政编码的客户：
+CREATE PROCEDURE GetCustomersByCity
+  @City nvarchar(50),
+  @PostalCode nvarchar(10)
+AS
+BEGIN
+  SELECT * FROM Customers
+  WHERE City = @City AND PostalCode = @PostalCode;
+END;
+按如下方式执行上述存储过程：
+EXEC GetCustomersByCity @City = 'London', @PostalCode = 'WA1 1DP';
+
+
+
+
+
+
+
+
+
+
+
+
 
