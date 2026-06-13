@@ -36,29 +36,117 @@ FROM Products GROUP BY CategoryID;
 该MAX()函数返回所选列中的最大值。
 该MAX()函数可处理数值、字符串和日期数据类型。
 
+3.COUNT() 函数
+该COUNT()函数返回 符合指定条件的 行数。
+SELECT COUNT([DISTINCT] column_name | *)
+FROM table_name WHERE condition;
+行为COUNT()取决于括号内使用的参数：
+COUNT(*)- 计算表中的总行数（包括 NULL 值）。
+COUNT(columnname)- 统计列中 所有非空值。
+COUNT(DISTINCT columnname)- 仅统计列中 唯一的非空值。
+使用COUNT(*)，并计算“Products”表中的总行数（将包含 NULL 值）：
+SELECT COUNT(*) FROM Products;
+// COUNT(column_name)
+COUNT(column_name)统计指定列中 所有非空值的数量。
+统计“ProductName”列中所有非空值：
+SELECT COUNT(ProductName) FROM Products;
 
+//COUNT(DISTINCT column_name)
+可以使用DISTINCT关键字 忽略重复项。
+该COUNT(DISTINCT column_name)统计仅包含 列中唯一的非空值。
+如果DISTINCT指定了该列，则具有相同值的行将计为 1 行。
+以下 SQL 语句统计“Price”列中唯一且非空的值的数量：
+“产品”表中共有多少种不同的价格？
+SELECT COUNT(DISTINCT Price)
+FROM Products;
 
+//添加 WHERE 子句
+您可以添加WHERE子句来指定条件：
+统计价格高于 20 的商品数量：
+SELECT COUNT(ProductID)
+FROM Products WHERE Price > 20;
 
+//使用别名
+使用该函数时COUNT()，  返回的列将没有名称。  请使用 AS关键字为该列 指定一个描述性名称。
+将“计数”列命名为“记录数”：
+SELECT COUNT(*) AS [Number of records]
+FROM Products;
 
+// COUNT() 函数与 GROUP BY 函数结合使用
+这里使用COUNT()函数和 GROUP BY子句，返回“Products”表中 每个类别的记录数：
+SELECT COUNT(*) AS [Number of records], CategoryID
+FROM Products GROUP BY CategoryID;
 
+4.SUM()函数
+该SUM()函数用于计算 数值列中所有值的总和。                  （计算和）
+该SUM()函数会忽略列中的 NULL 值。
+以下 SQL 语句返回“OrderDetails”表中  “Quantity”字段的总和：
+SELECT SUM(Quantity) FROM OrderDetails;
+SELECT SUM(column_name)
+FROM table_name WHERE condition;
 
+//添加 WHERE 子句
+可以添加WHERE子句来指定条件。
+以下 SQL 语句返回“OrderDetails”表中 ProductID = 11 的产品的 Quantity 字段的总和：
+SELECT SUM(Quantity)
+FROM OrderDetails WHERE ProductId = 11;
 
+//使用别名
+使用关键字为汇总列 命名AS。
+将列命名为“总计”：
+SELECT SUM(Quantity) AS total
+FROM OrderDetails;
 
+//SUM() 函数与 GROUP BY 子句结合使用
+这里我们使用SUM()函数和 GROUP BY子句，返回“OrderDetails”表中  每个 OrderID 的数量：
+SELECT OrderID, SUM(Quantity) AS [Total Quantity]
+FROM OrderDetails
+GROUP BY OrderID;
 
+//使用表达式的 SUM()
+函数内部的参数SUM()也​​可以     是表达式。
+假设“订单详情”表中每件商品的价格为 10 美元，我们可以通过将每件商品的 数量乘以 10 来计算总收入（以美元为单位）：
+在函数内部使用表达式SUM()：
+SELECT SUM(Quantity * 10)
+FROM OrderDetails;
 
+//还可以将“OrderDetails”表与“Products”表连接起来，以找到实际价格，而不是假设它是 10 美元：
+连接OrderDetails起来 Products，并使用以下方法SUM()计算总金额：
+SELECT SUM(Price * Quantity)
+FROM OrderDetails
+LEFT JOIN Products ON OrderDetails.ProductID = Products.ProductID;
 
+// AVG() 函数
+该AVG()函数返回数值列 的平均值。
+该AVG()函数会忽略 列中的 NULL 值。
+求所有产品的平均价格：
+SELECT AVG(Price)
+FROM Products;
 
+//添加 WHERE 子句
+可以添加WHERE子句来 指定条件：
+返回第一类产品的平均价格：
+SELECT AVG(Price)
+FROM Products
+WHERE CategoryID = 1;
 
+//使用别名
+使用关键字为 AVG 列命名AS。
+将列命名为“平均价格”：                    （重点理解别名）
+SELECT AVG(Price) AS [average price]
+FROM Products;
 
+//高于平均水平
+要列出所有价格高于平均价格的记录，我们可以使用  AVG()子查询中的函数：
+退回所有价格高于平均价格的产品：
+SELECT * FROM Products
+WHERE Price > (SELECT AVG(Price) FROM Products);
 
-
-
-
-
-
-
-
-
+// AVG() 与 GROUP BY 结合使用
+这里我们使用AVG()函数和 GROUP BY子句，返回“产品”表中每个类别的 平均价格：
+SELECT AVG(Price) AS AveragePrice, CategoryID
+FROM Products
+GROUP BY CategoryID;
 
 
 
