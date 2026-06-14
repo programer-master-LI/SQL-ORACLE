@@ -88,7 +88,8 @@ ls
 在xshell输入
 yum install mysql-sever -y
 启动mysql服务
-systemctl start mysqld
+systemctl start mysqld  （linux）
+net start mysql          (windows下)
 查看是否已出现监听mysql 3306端口
 netstat -nltp 查看端口状态
 netstat -nltp |grep 3306指定查看3306端口
@@ -98,7 +99,7 @@ mysql_secure_installation
 输入y
 设置mysql的密码（注意），再一直回车
 ///登录数据库
-mysql -uroot -p
+mysql -u root -p
 输mysql的密码261717ln
 ///登录进来后
 创建一个数据库
@@ -127,7 +128,7 @@ quit退出
 输入上面创建的信息
 网站的安装程序与数据库成功对接
 点进入管理后台
-mysql -uroot -p
+mysql -u root -p
 密码261717ln
 show databases;
 use discuz；进入discuz库（重要）
@@ -182,6 +183,23 @@ exit;
 
 最后再删除
 skip-grant-tables或注释掉#
+
+九、数据库管理工具
+可视化软件mysql workbench支持 EER 建模
+navicat支持 ER 图设计               用于数据库设计
+navicat是付费使用的，安装激活包激活navicat
+有四个自带原生库，不能删除
+左上角点连接找到mysql
+点localhost3306右键新建数据库
+
+导出数据库文件
+导入运行数据库文件
+
+
+
+
+
+
 
 
 
