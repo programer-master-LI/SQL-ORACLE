@@ -59,7 +59,8 @@ Redis
 一.确认系统平台，跨平台linux到windows
 
 ## 二.安装方法（企业用）
-
+windows版
+客户端连接，使用mysql提供的客户端命令行工具在开始菜单打开
 二进制包安装
 SQL 5.7二进制包(mysql官网)
 设置PATH环境变量，确保系统能识别mysql命令，便于在任何目录下操作mysql
@@ -70,6 +71,7 @@ SQL 5.7二进制包(mysql官网)
 启动mysql服务
 通过命令行或系统服务管理工具启动mysql服务，并检查服务状态正常运行
 
+linux服务器版
 依赖包安装两个（libaio:功能是支持异步I/O操作，mysql运行必需，numactl优化多核cpu内存分配）
 centos服务器用sudo yum install libaio numactl-libs -y安装依赖包
 ubuntu服务器用sudo apt update和sudo apt libaio numactl-libs -y安装依赖包
@@ -195,7 +197,8 @@ navicat是付费使用的，安装激活包激活navicat
 导出数据库文件
 导入运行数据库文件
 
-
+十、windows版
+客户端连接，使用mysql提供的客户端命令行工具在开始菜单打开
 
 
 
